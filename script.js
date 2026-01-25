@@ -1,26 +1,32 @@
 // =========================
 // CONFIGURACIÓN DE FECHA
 // =========================
-// const targetDate = new Date(2026, 1, 13, 0, 0, 0); // Febrero = 1 (0-based)
-const targetDate = new Date(new Date().getTime() + 10 * 1000); // 10 segundos desde ahora
+const targetDate = new Date(2026, 1, 13, 0, 0, 0); // Febrero = 1 (0-based)
+// Para test rápido: 10 segundos desde ahora
+// const targetDate = new Date(new Date().getTime() + 10 * 1000);
 
 // =========================
 // CONTENEDOR DE CONTADOR
 // =========================
 const body = document.body;
-const mainContent = document.querySelector("body > *");
+const mainContent = document.querySelector("body > *:not(script)"); // todo menos scripts
 mainContent.style.display = "none"; // ocultamos contenido principal
 
+// Crear div del contador
 const countdownDiv = document.createElement("div");
 countdownDiv.style.display = "flex";
 countdownDiv.style.flexDirection = "column";
 countdownDiv.style.justifyContent = "center";
 countdownDiv.style.alignItems = "center";
 countdownDiv.style.height = "100vh";
+countdownDiv.style.width = "100%";
+countdownDiv.style.position = "fixed"; // fijo para cubrir toda la pantalla
+countdownDiv.style.top = "0";
+countdownDiv.style.left = "0";
+countdownDiv.style.overflow = "hidden"; // evita scroll
+countdownDiv.style.zIndex = "9999"; // siempre arriba
 countdownDiv.style.textAlign = "center";
 countdownDiv.style.fontFamily = "'Poppins', sans-serif";
-countdownDiv.style.position = "relative";
-countdownDiv.style.overflow = "hidden";
 countdownDiv.style.background = "linear-gradient(135deg, #fde8ef, #fff0f5)";
 countdownDiv.innerHTML = `
   <h1 style="font-size:2rem; color:#c2185b;">💖 Nuestro Primer San Valentín 💖</h1>
@@ -59,17 +65,54 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // =========================
-// CONTADOR
+// FUNCIONES DE CONFETTI
+// =========================
+const confettiColors = ["#c2185b", "#f48fb1", "#fde8ef", "#ffffff"];
+const bigQuestionSection = document.querySelector(".big-question");
+
+function launchConfetti() {
+  for (let i = 0; i < 30; i++) {
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.position = "absolute";
+    confetti.style.left = Math.random() * 100 + "%";
+    confetti.style.top = "-10px";
+    confetti.style.width = 6 + Math.random() * 6 + "px";
+    confetti.style.height = 10 + Math.random() * 10 + "px";
+    confetti.style.backgroundColor =
+      confettiColors[Math.floor(Math.random() * confettiColors.length)];
+    confetti.style.opacity = "0.9";
+    confetti.style.pointerEvents = "none";
+    confetti.style.animation =
+      2 + Math.random() * 2 + "s confettiFall linear forwards";
+    bigQuestionSection.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 4000);
+  }
+}
+
+// Animación CSS para confeti
+const confettiStyle = document.createElement("style");
+confettiStyle.innerHTML = `
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
+}
+`;
+document.head.appendChild(confettiStyle);
+
+// =========================
+// FUNCIONES DEL CONTADOR
 // =========================
 function updateCountdown() {
   const now = new Date();
   const diff = targetDate - now;
 
   if (diff <= 0) {
-    countdownDiv.remove();
-    mainContent.style.display = "block";
+    countdownDiv.remove(); // quitar contador
+    mainContent.style.display = "block"; // mostrar contenido
     clearInterval(countdownInterval);
     clearInterval(heartInterval);
+    launchConfetti(); // confeti al desbloquear
     return;
   }
 
@@ -83,197 +126,8 @@ function updateCountdown() {
 }
 
 // =========================
-// INTERVALS
+// INTERVALOS
 // =========================
 updateCountdown();
 const countdownInterval = setInterval(updateCountdown, 1000);
-const heartInterval = setInterval(createHeart, 300); // crear corazones cada 0.3s
-
-// =========================
-// SELECT ELEMENTS
-// =========================
-const answerButtons = document.querySelectorAll(".answer[data-response]");
-const message = document.querySelector(".answer-message");
-const specialPhoto = document.querySelector(".special-photo");
-const responseBox = document.querySelector(".response-box");
-const responseText = document.getElementById("responseText");
-const sendResponseBtn = document.getElementById("sendResponse");
-const bigQuestionSection = document.querySelector(".big-question");
-const polaroidGallery = document.querySelector(".polaroid-gallery");
-
-// =========================
-// STATE
-// =========================
-let selectedResponse = "";
-
-// =========================
-// MESSAGES BY RESPONSE
-// =========================
-const messages = {
-  soft: "Sabía que tu respuesta sería así 🥰 tan linda como TU y de corazón 💕",
-  happy: "Awwww sabía que dirías eso 😍 me alegraste el día 💖",
-  sure: "Obvi, sabía que no podía ser con nadie más que contigo 💞✨",
-};
-
-// =========================
-// CONFETTI COLORS
-// =========================
-const confettiColors = ["#c2185b", "#f48fb1", "#fde8ef", "#ffffff"];
-
-// =========================
-// RESTORE MEMORY (localStorage)
-// =========================
-const savedMemory = localStorage.getItem("valentineMemory");
-
-if (savedMemory) {
-  const memory = JSON.parse(savedMemory);
-
-  selectedResponse = memory.respuesta;
-
-  // Mostrar mensaje de respuesta
-  message.innerHTML = `<p>${messages[selectedResponse]}</p>`;
-  message.classList.remove("hidden");
-
-  // Mostrar foto especial
-  specialPhoto.classList.remove("hidden");
-
-  // Mostrar caja de respuesta con el recuerdo
-  responseBox.classList.remove("hidden");
-  responseBox.innerHTML = `
-    <p style="color:#c2185b; font-weight:500;">
-      💌 Este recuerdo ya quedó guardado<br><br>
-      <em>"${memory.mensaje}"</em><br><br>
-      <small>${memory.fecha}</small>
-    </p>
-  `;
-
-  // Deshabilitar botones
-  answerButtons.forEach((btn) => {
-    btn.disabled = true;
-    btn.style.opacity = "0.6";
-    btn.style.cursor = "default";
-  });
-
-  // Crear polaroid del recuerdo guardado
-  addPolaroid(memory);
-}
-
-// =========================
-// HANDLE ANSWER BUTTONS
-// =========================
-answerButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    selectedResponse = button.dataset.response;
-
-    // Mostrar mensaje personalizado
-    message.innerHTML = `<p>${messages[selectedResponse]}</p>`;
-    message.classList.remove("hidden");
-
-    // Mostrar foto especial
-    specialPhoto.classList.remove("hidden");
-
-    // Mostrar caja de respuesta
-    responseBox.classList.remove("hidden");
-
-    // Deshabilitar botones
-    answerButtons.forEach((btn) => {
-      btn.disabled = true;
-      btn.style.opacity = "0.7";
-      btn.style.cursor = "default";
-    });
-
-    // Lanzar confetti 🎉
-    launchConfetti();
-  });
-});
-
-// =========================
-// SEND RESPONSE + SAVE MEMORY + POLAROID
-// =========================
-sendResponseBtn.addEventListener("click", async () => {
-  const comment = responseText.value.trim() || "Sin comentario";
-
-  const memory = {
-    respuesta: selectedResponse,
-    mensaje: comment,
-    fecha: new Date().toLocaleString(),
-  };
-
-  // 🔐 Guardar en localStorage
-  localStorage.setItem("valentineMemory", JSON.stringify(memory));
-
-  // ⚠️ Formspree endpoint
-  const ENDPOINT_URL = "https://formspree.io/f/xykevqdq";
-
-  try {
-    await fetch(ENDPOINT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(memory),
-    });
-
-    // Mostrar mensaje de confirmación
-    responseBox.innerHTML = `
-      <p style="color:#c2185b; font-weight:500;">
-        Gracias por escribirme 💖<br>
-        Este mensaje lo voy a guardar con mucho cariñito.
-      </p>
-    `;
-
-    // Crear polaroid del nuevo mensaje
-    addPolaroid(memory);
-  } catch (error) {
-    responseBox.innerHTML = `
-      <p style="color:#c2185b;">
-        Tu mensaje quedó guardado 💕<br>
-        Aunque algo falló al enviarlo, ya está a salvo.
-      </p>
-    `;
-    addPolaroid(memory);
-  }
-});
-
-// =========================
-// FUNCTION: CREATE POLAROID
-// =========================
-function addPolaroid(memory) {
-  const polaroid = document.createElement("div");
-  polaroid.classList.add("polaroid");
-
-  // Rotación ligera aleatoria
-  const rotateDeg = Math.floor(Math.random() * 5) - 2; // -2 a 2 grados
-  polaroid.style.transform = `rotate(${rotateDeg}deg)`;
-
-  polaroid.innerHTML = `
-    <div style="padding: 1rem; font-size:0.95rem; color:#2e2e2e;">
-      💌 "${memory.mensaje}"<br>
-      <small style="color:#6b6b6b;">${memory.fecha}</small>
-    </div>
-  `;
-
-  // Insertar al inicio de la galería
-  polaroidGallery.prepend(polaroid);
-}
-
-// =========================
-// CONFETTI ANIMATION
-// =========================
-function launchConfetti() {
-  for (let i = 0; i < 30; i++) {
-    const confetti = document.createElement("div");
-    confetti.classList.add("confetti");
-
-    confetti.style.left = Math.random() * 100 + "%";
-    confetti.style.backgroundColor =
-      confettiColors[Math.floor(Math.random() * confettiColors.length)];
-    confetti.style.animationDuration = 2 + Math.random() * 2 + "s";
-    confetti.style.width = 6 + Math.random() * 6 + "px";
-    confetti.style.height = 10 + Math.random() * 10 + "px";
-
-    bigQuestionSection.appendChild(confetti);
-
-    setTimeout(() => confetti.remove(), 4000);
-  }
-}
+const heartInterval = setInterval(createHeart, 300); // corazones cada 0.3s
