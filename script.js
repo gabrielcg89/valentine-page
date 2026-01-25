@@ -1,9 +1,9 @@
 // =========================
 // CONFIGURACIÓN DE FECHA
 // =========================
-const targetDate = new Date(2026, 1, 13, 0, 0, 0); // Febrero = 1 (0-based)
+// const targetDate = new Date(2026, 1, 13, 0, 0, 0); // Febrero = 1 (0-based)
 // Para test rápido: 10 segundos desde ahora
-// const targetDate = new Date(new Date().getTime() + 10 * 1000);
+const targetDate = new Date(new Date().getTime() + 10 * 1000);
 
 // =========================
 // CONTENEDOR DE CONTADOR
