@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Para MI Amorcito 💖</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Poppins:wght@300;400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <!-- =========================
+       HERO
+  ========================== -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Will you be my Valentine?</h1>
+            <p>
+                No hice esta página por casualidad.
+                La hice porque desde que llegaste, todo se siente distinto…
+                más tranquilo, más bonito, más real 💕
+            </p>
+
+            <div class="hero-image">
+                <img src="./img/stef_and_me_4.webp" alt="Stephanie y yo">
+            </div>
+        </div>
+    </header>
+
+    <!-- =========================
+       POR QUÉ ERES MI ELECCIÓN
+  ========================== -->
+    <section class="reasons">
+        <h2>Por qué tú eres mi elección</h2>
+
+        <ul class="reasons-list">
+            <li>Porque con nosotros nada se siente forzado ni con prisas. Todo ha fluido con calma, hablando las cosas
+                de frente y con honestidad, y eso es lo que más me confirma que lo que tenemos es real.</li>
+            <li>Porque tener a Dios como el centro de nuestra relación lo cambia todo. Orar juntos, hablar de El y
+                tratar de hacer las cosas bien bajo su guía me da la paz de saber que voy por el camino correcto a tu
+                ladito.</li>
+            <li>Porque nos cuidamos de verdad. Me gusta que entendamos que poner límites sanos también es una forma de
+                amarnos; no lo hacemos por falta de amor, sino por las ganas que tenemos de proteger esta relación tan
+                bonita que estamos construyendo.</li>
+            <li>Porque contigo me siento feliz y en paz. Puedo ser yo mismo, contarte lo que sea, reírnos o simplemente
+                estar cerquita abrazados... esa tranquilidad de ser uno mismo no se encuentra en cualquier persona.</li>
+            <li>Porque los 2 estamos en la misma sintonía de querer crecer. No solo vivimos el momento, sino que estamos
+                construyendo una base sólida para caminar juntos y apoyarnos en todo, con la ilusión de construir una
+                vida juntitos.</li>
+        </ul>
+    </section>
+
+    <!-- =========================
+       POR QUÉ DECIR QUE SÍ
+  ========================== -->
+    <section class="say-yes">
+        <h2>Por qué deberías decir que sí</h2>
+
+        <div class="yes-reasons">
+            <div class="yes-card">
+                <h3>💌 Porque cada momento contigo es especial</h3>
+                <p>Porque desde nuestras saliditas, risas y abrazos hasta los detalles más pequeños, todo contigo se
+                    siente tan lindo y muy especial, y es algo que debemos celebrar.</p>
+            </div>
+
+            <div class="yes-card">
+                <h3>🌸 Porque me hacés sonreír sin esfuerzo</h3>
+                <p>Porque estar a tu lado me llena de alegría, y sé que este San Valentín juntos será tan lindo como
+                    todos esos momentos que ya compartimos.</p>
+            </div>
+
+            <div class="yes-card">
+                <h3>✨ Porque quiero que lo vivamos juntos</h3>
+                <p>Porque no quiero pasar este día con cualquiera, quiero compartirlo contigo, reírnos, abrazarnos y
+                    crear un recuerdo más de lo bonito que es estar juntitos.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================
+       PRONÓSTICO
+  ========================== -->
+    <section class="forecast">
+        <h2>Pronóstico para el 13 de febrero 💕</h2>
+
+        <p>
+            Este 13 de febrero lo vamos a pasar muy lindito, riendo, abrazaditos y disfrutando cada momento. Habrá
+            miradas llenas de amor y emoción, muchos besitos, comidita rica, y momentos solo nuestros que nos hagan
+            sentir que el tiempo se detiene cuando estamos juntitos 🥰✨
+        </p>
+
+        <div class="forecast-details">
+            <span>📍 Lugar: Donde estemos juntitos</span>
+            <span>🍽️ Plan: Comer rico, disfrutar de todo</span>
+            <span>💫 Ambiente: Romántico, bonito y muy nuestro</span>
+        </div>
+    </section>
+
+    <!-- =========================
+       LA GRAN PREGUNTA
+  ========================== -->
+    <section class="big-question">
+        <h2>Y ahora…</h2>
+        <h1>¿Quieres ser mi San Valentín?</h1>
+
+        <div class="answer-options">
+            <button class="answer" data-response="soft">
+                Sí, obvio que quiero ser tu San Valentín 🩷
+            </button>
+
+            <button class="answer" data-response="happy">
+                Claro que sí, contigo siempre 😍
+            </button>
+
+            <button class="answer" data-response="sure">
+                Obviooo, no podría ser con nadie más que contigo 💞
+            </button>
+        </div>
+
+        <!-- MENSAJE DINÁMICO -->
+        <div class="answer-message hidden"></div>
+
+        <!-- FOTO ESPECIAL -->
+        <div class="special-photo hidden">
+            <img src="./img/stef_and_me_3.webp" alt="Nuestro momento especial">
+            <p>Este es solo el comienzo de algo muy bonito 💕</p>
+        </div>
+
+        <!-- MENSAJE OPCIONAL -->
+        <div class="response-box hidden">
+            <p class="response-title">Si quieres decirme algo, escríbelo aquí 💌</p>
+            <textarea id="responseText" placeholder="Escribe aquí lo que tu quieras cielito…"></textarea>
+            <button id="sendResponse" class="answer">
+                Enviar mensaje 💖
+            </button>
+        </div>
+    </section>
+
+    <!-- =========================
+       RECUERDOS
+  ========================== -->
+    <section class="memories">
+        <h2>Nuestros recuerdos</h2>
+
+        <div class="polaroid-gallery">
+            <div class="polaroid">
+                <img src="./img/stef_and_me_1.webp" alt="Recuerdo 1">
+                <span>Nosotros 💕</span>
+            </div>
+
+            <div class="polaroid">
+                <img src="./img/stef_and_me_2.webp" alt="Recuerdo 2">
+                <span>Ese día ✨</span>
+            </div>
+
+            <div class="polaroid">
+                <img src="./img/stef_and_me_5.webp" alt="Recuerdo 3">
+                <span>Siempre tú y yo</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- =========================
+       FOOTER
+  ========================== -->
+    <footer class="footer">
+        <p>Hecho con ❤️ solo para ti</p>
+    </footer>
+
+    <!-- JS -->
+    <script src="script.js"></script>
+</body>
+
+</html>
