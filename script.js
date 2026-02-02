@@ -1,71 +1,76 @@
 // =========================
 // CONFIGURACIÓN DE FECHA
 // =========================
-// const targetDate = new Date(2026, 1, 13, 0, 0, 0); // Febrero = 1 (0-based)
-// Para test rápido: 10 segundos desde ahora
+// Fecha real:
+// const targetDate = new Date(2026, 1, 13, 0, 0, 0);
+
+// Para pruebas rápidas (10 segundos)
 const targetDate = new Date(new Date().getTime() + 10 * 1000);
 
 // =========================
-// CONTENEDOR DE CONTADOR
+// OCULTAR CONTENIDO PRINCIPAL
 // =========================
 const body = document.body;
-const mainContent = document.querySelector("body > *:not(script)"); // todo menos scripts
-mainContent.style.display = "none"; // ocultamos contenido principal
+const allContent = Array.from(body.children).filter(
+  el => el.tagName !== "SCRIPT"
+);
 
-// Crear div del contador
+allContent.forEach(el => el.style.display = "none");
+
+// =========================
+// CONTADOR
+// =========================
 const countdownDiv = document.createElement("div");
-countdownDiv.style.display = "flex";
-countdownDiv.style.flexDirection = "column";
-countdownDiv.style.justifyContent = "center";
-countdownDiv.style.alignItems = "center";
-countdownDiv.style.height = "100vh";
-countdownDiv.style.width = "100%";
-countdownDiv.style.position = "fixed"; // fijo para cubrir toda la pantalla
-countdownDiv.style.top = "0";
-countdownDiv.style.left = "0";
-countdownDiv.style.overflow = "hidden"; // evita scroll
-countdownDiv.style.zIndex = "9999"; // siempre arriba
-countdownDiv.style.textAlign = "center";
-countdownDiv.style.fontFamily = "'Poppins', sans-serif";
-countdownDiv.style.background = "linear-gradient(135deg, #fde8ef, #fff0f5)";
+countdownDiv.style.cssText = `
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(135deg, #fde8ef, #fff0f5);
+  z-index: 9999;
+  font-family: 'Poppins', sans-serif;
+`;
+
 countdownDiv.innerHTML = `
-  <h1 style="font-size:2rem; color:#c2185b;">💖 Nuestro Primer San Valentín 💖</h1>
-  <p style="font-size:1.2rem; color:#2e2e2e; margin-top:1rem;">Cielito, espera un poquito más 🤭…</p>
+  <h1 style="color:#c2185b;">💖 Nuestro Primer San Valentín 💖</h1>
+  <p style="margin-top:1rem;">Cielito, espera un poquito más 🤭…</p>
   <h2 id="countdown" style="font-size:3rem; color:#c2185b; margin-top:2rem;"></h2>
 `;
+
 body.prepend(countdownDiv);
 
 // =========================
-// FUNCIONES DE CORAZONES
+// CORAZONES
 // =========================
 function createHeart() {
   const heart = document.createElement("div");
   heart.textContent = "💖";
-  heart.style.position = "absolute";
-  heart.style.fontSize = 20 + Math.random() * 20 + "px";
-  heart.style.left = Math.random() * 100 + "%";
-  heart.style.top = "-30px";
-  heart.style.opacity = Math.random();
-  heart.style.pointerEvents = "none";
-  heart.style.animation = `floatHeart ${3 + Math.random() * 2}s linear forwards`;
+  heart.style.cssText = `
+    position:absolute;
+    left:${Math.random() * 100}%;
+    top:-30px;
+    font-size:${20 + Math.random() * 20}px;
+    animation: floatHeart ${3 + Math.random() * 2}s linear forwards;
+    pointer-events:none;
+  `;
   countdownDiv.appendChild(heart);
-
   setTimeout(() => heart.remove(), 5000);
 }
 
-// Animación CSS para los corazones
-const style = document.createElement("style");
-style.innerHTML = `
+const heartStyle = document.createElement("style");
+heartStyle.innerHTML = `
 @keyframes floatHeart {
   0% {transform: translateY(0) scale(1); opacity: 0;}
   10% {opacity: 1;}
   100% {transform: translateY(-400px) scale(1.5); opacity: 0;}
-}
-`;
-document.head.appendChild(style);
+}`;
+document.head.appendChild(heartStyle);
 
 // =========================
-// FUNCIONES DE CONFETTI
+// CONFETTI
 // =========================
 const confettiColors = ["#c2185b", "#f48fb1", "#fde8ef", "#ffffff"];
 const bigQuestionSection = document.querySelector(".big-question");
@@ -73,61 +78,70 @@ const bigQuestionSection = document.querySelector(".big-question");
 function launchConfetti() {
   for (let i = 0; i < 30; i++) {
     const confetti = document.createElement("div");
-    confetti.classList.add("confetti");
-    confetti.style.position = "absolute";
-    confetti.style.left = Math.random() * 100 + "%";
-    confetti.style.top = "-10px";
-    confetti.style.width = 6 + Math.random() * 6 + "px";
-    confetti.style.height = 10 + Math.random() * 10 + "px";
-    confetti.style.backgroundColor =
-      confettiColors[Math.floor(Math.random() * confettiColors.length)];
-    confetti.style.opacity = "0.9";
-    confetti.style.pointerEvents = "none";
-    confetti.style.animation =
-      2 + Math.random() * 2 + "s confettiFall linear forwards";
+    confetti.className = "confetti";
+    confetti.style.cssText = `
+      left:${Math.random() * 100}%;
+      background:${confettiColors[Math.floor(Math.random() * confettiColors.length)]};
+      animation:${2 + Math.random() * 2}s confettiFall linear forwards;
+    `;
     bigQuestionSection.appendChild(confetti);
     setTimeout(() => confetti.remove(), 4000);
   }
 }
 
-// Animación CSS para confeti
-const confettiStyle = document.createElement("style");
-confettiStyle.innerHTML = `
-@keyframes confettiFall {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(400px) rotate(360deg); opacity: 0; }
-}
-`;
-document.head.appendChild(confettiStyle);
-
 // =========================
-// FUNCIONES DEL CONTADOR
+// CONTADOR LÓGICA
 // =========================
 function updateCountdown() {
-  const now = new Date();
-  const diff = targetDate - now;
+  const diff = targetDate - new Date();
 
   if (diff <= 0) {
-    countdownDiv.remove(); // quitar contador
-    mainContent.style.display = "block"; // mostrar contenido
+    countdownDiv.remove();
+    allContent.forEach(el => el.style.display = "");
     clearInterval(countdownInterval);
     clearInterval(heartInterval);
-    launchConfetti(); // confeti al desbloquear
+    launchConfetti();
     return;
   }
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-  const minutes = Math.floor((diff / (1000 * 60)) % 60);
-  const seconds = Math.floor((diff / 1000) % 60);
+  const s = Math.floor(diff / 1000) % 60;
+  const m = Math.floor(diff / 60000) % 60;
+  const h = Math.floor(diff / 3600000) % 24;
+  const d = Math.floor(diff / 86400000);
 
   document.getElementById("countdown").textContent =
-    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    `${d}d ${h}h ${m}m ${s}s`;
 }
 
-// =========================
-// INTERVALOS
-// =========================
 updateCountdown();
 const countdownInterval = setInterval(updateCountdown, 1000);
-const heartInterval = setInterval(createHeart, 300); // corazones cada 0.3s
+const heartInterval = setInterval(createHeart, 300);
+
+// =========================
+// SELECCIÓN DE OPCIÓN ❤️
+// =========================
+const buttons = document.querySelectorAll(".answer");
+const messageBox = document.querySelector(".answer-message");
+const photo = document.querySelector(".special-photo");
+const responseBox = document.querySelector(".response-box");
+
+const messages = {
+  soft: "Sabía que dirías que sí… mi corazón ya lo sentía 💕",
+  happy: "No sabes lo feliz que me hace leerte 😍✨",
+  sure: "Entonces es oficial… eres mi San Valentín 💖🥰"
+};
+
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const type = btn.dataset.response;
+
+    messageBox.textContent = messages[type];
+    messageBox.classList.remove("hidden");
+    photo.classList.remove("hidden");
+    responseBox.classList.remove("hidden");
+
+    buttons.forEach(b => b.disabled = true);
+
+    launchConfetti();
+  });
+});
